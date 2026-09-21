@@ -54,6 +54,7 @@
       <ul class="nav-menu" id="nav-menu" role="list">
         <li><a href="#about" class="nav-item" data-text="About">About</a></li>
         <li><a href="#pillars" class="nav-item" data-text="Pillars">Pillars</a></li>
+        <li><a href="#calculator" class="nav-item" data-text="Calculator">Calculator</a></li>
         <li><a href="#services" class="nav-item" data-text="Services">Services</a></li>
         <li><a href="#impact" class="nav-item" data-text="Impact">Impact</a></li>
         <li><a href="#contact" class="nav-cta magnetic" id="nav-cta-btn">
@@ -343,8 +344,8 @@
     </div>
   </section>
 
-  <!-- =================== 12K TAX BANNER =================== -->
-  <section class="tax-banner" aria-labelledby="tax-h2">
+  <!-- =================== 12K TAX CALCULATOR =================== -->
+  <section id="calculator" class="tax-banner calc-section" aria-labelledby="tax-h2">
     <div class="tax-banner-grid">
       <div class="tax-banner-bg" aria-hidden="true">
         <canvas id="tax-canvas" aria-hidden="true"></canvas>
@@ -352,45 +353,126 @@
       </div>
       <div class="container tax-banner-inner">
         <div class="tax-text-col">
-          <div class="eyebrow light" data-reveal>The Opportunity</div>
-          <h2 id="tax-h2" class="section-h2 light" data-reveal>Most Families Are<br/><em>Voluntarily</em> Overpaying.</h2>
-          <p class="tax-body" data-reveal>The IRS doesn't send refund reminders. They simply keep what you don't claim. Through a properly structured home-based business, a working family can legally retain $12,000 or more per year — money that was always theirs.</p>
-          <a href="#contact" class="btn-primary magnetic" id="tax-cta-btn" data-reveal>
-            <span class="btn-inner">Start Keeping Your Money</span>
-            <span class="btn-glow"></span>
-          </a>
+          <div class="eyebrow light" data-reveal>Interactive Tax Calculator</div>
+          <h2 id="tax-h2" class="section-h2 light" data-reveal>How Much Are You<br/><em>Leaving</em> on the Table?</h2>
+          <p class="tax-body" data-reveal>The IRS doesn't send refund reminders. They simply keep what you don't claim. Slide your household income and toggle your eligible home business strategies to reveal your estimated annual savings.</p>
+          
+          <!-- Live Result Showcase Card -->
+          <div class="calc-summary-card" data-reveal>
+            <div class="cs-header">
+              <span class="cs-label">Estimated Annual Tax Kept</span>
+              <span class="cs-badge">IRS-Compliant</span>
+            </div>
+            <div class="cs-amount" id="calc-total-display">$12,800<span class="cs-suffix">/yr</span></div>
+            <div class="cs-sub-row">
+              <div class="cs-sub-item">
+                <span class="cs-sub-label">Monthly Cashflow Boost</span>
+                <span class="cs-sub-val" id="calc-monthly-display">+$1,067/mo</span>
+              </div>
+              <div class="cs-divider" aria-hidden="true"></div>
+              <div class="cs-sub-item">
+                <span class="cs-sub-label">Eligible Deductions</span>
+                <span class="cs-sub-val" id="calc-ded-total">$32,000</span>
+              </div>
+            </div>
+            
+            <button type="button" class="btn-primary magnetic btn-full" id="calc-send-blueprint-btn">
+              <span class="btn-inner">Send My Custom Blueprint to Debra</span>
+              <span class="btn-glow"></span>
+            </button>
+            <span class="calc-guarantee-note">🔒 Zero obligation. Automatically pre-fills your contact request below.</span>
+          </div>
         </div>
-        <div class="tax-visual-col">
-          <div class="deduction-list" aria-label="Tax deduction breakdown">
-            <div class="ded-item" style="--delay:0s">
-              <span class="ded-label">Home Office</span>
-              <span class="ded-amount">$2,400/yr</span>
-              <div class="ded-bar"><div class="ded-fill" style="--w:65%"></div></div>
+
+        <div class="tax-visual-col" data-reveal>
+          <div class="calc-card" id="tax-calculator-app">
+            <!-- Income Slider Control -->
+            <div class="calc-control-group">
+              <div class="calc-control-label">
+                <label for="calc-income-slider">Annual Household Income</label>
+                <span class="calc-slider-value" id="calc-income-val">$85,000</span>
+              </div>
+              <input type="range" id="calc-income-slider" min="40000" max="250000" step="5000" value="85000" class="calc-range-input" aria-label="Annual Household Income Slider"/>
+              <div class="calc-range-ticks" aria-hidden="true">
+                <span>$40K</span>
+                <span>$100K</span>
+                <span>$175K</span>
+                <span>$250K+</span>
+              </div>
             </div>
-            <div class="ded-item" style="--delay:0.1s">
-              <span class="ded-label">Vehicle &amp; Mileage</span>
-              <span class="ded-amount">$3,200/yr</span>
-              <div class="ded-bar"><div class="ded-fill" style="--w:82%"></div></div>
+
+            <!-- Deduction Toggles Header -->
+            <div class="calc-deductions-header">
+              <span>Select Your Eligible Strategies</span>
+              <button type="button" id="calc-select-all" class="calc-text-btn">Deselect All</button>
             </div>
-            <div class="ded-item" style="--delay:0.2s">
-              <span class="ded-label">Child Employment</span>
-              <span class="ded-amount">$2,800/yr</span>
-              <div class="ded-bar"><div class="ded-fill" style="--w:72%"></div></div>
-            </div>
-            <div class="ded-item" style="--delay:0.3s">
-              <span class="ded-label">Business Supplies</span>
-              <span class="ded-amount">$1,600/yr</span>
-              <div class="ded-bar"><div class="ded-fill" style="--w:45%"></div></div>
-            </div>
-            <div class="ded-item" style="--delay:0.4s">
-              <span class="ded-label">Education &amp; Training</span>
-              <span class="ded-amount">$1,200/yr</span>
-              <div class="ded-bar"><div class="ded-fill" style="--w:35%"></div></div>
-            </div>
-            <div class="ded-item ded-total" style="--delay:0.5s">
-              <span class="ded-label">Total Potential</span>
-              <span class="ded-amount highlight">$12,000+/yr</span>
-              <div class="ded-bar"><div class="ded-fill full" style="--w:100%"></div></div>
+
+            <!-- Deduction Option Cards -->
+            <div class="calc-options-list">
+              <!-- 1. Home Office -->
+              <label class="calc-option active" for="opt-home-office">
+                <input type="checkbox" id="opt-home-office" data-val="2400" checked class="calc-checkbox"/>
+                <div class="calc-opt-info">
+                  <div class="calc-opt-top">
+                    <span class="calc-opt-title">🏠 Home Office Deduction</span>
+                    <span class="calc-opt-amount">$2,400</span>
+                  </div>
+                  <span class="calc-opt-desc">IRS IRC § 280A write-off for dedicated workspace, utilities, and insurance</span>
+                  <div class="calc-opt-bar"><div class="calc-opt-bar-fill" style="width: 65%;"></div></div>
+                </div>
+              </label>
+
+              <!-- 2. Vehicle & Mileage -->
+              <label class="calc-option active" for="opt-vehicle">
+                <input type="checkbox" id="opt-vehicle" data-val="3200" checked class="calc-checkbox"/>
+                <div class="calc-opt-info">
+                  <div class="calc-opt-top">
+                    <span class="calc-opt-title">🚗 Business Mileage &amp; Travel</span>
+                    <span class="calc-opt-amount">$3,200</span>
+                  </div>
+                  <span class="calc-opt-desc">IRS standard mileage rate for supply runs, bank trips, and client consultations</span>
+                  <div class="calc-opt-bar"><div class="calc-opt-bar-fill" style="width: 82%;"></div></div>
+                </div>
+              </label>
+
+              <!-- 3. Child Employment -->
+              <label class="calc-option active" for="opt-child">
+                <input type="checkbox" id="opt-child" data-val="4200" checked class="calc-checkbox"/>
+                <div class="calc-opt-info">
+                  <div class="calc-opt-top">
+                    <span class="calc-opt-title">👶 Legally Employing Children (Ages 7–17)</span>
+                    <span class="calc-opt-amount">$4,200</span>
+                  </div>
+                  <span class="calc-opt-desc">Shift business income to children tax-free up to the standard deduction</span>
+                  <div class="calc-opt-bar"><div class="calc-opt-bar-fill" style="width: 75%;"></div></div>
+                </div>
+              </label>
+
+              <!-- 4. Cell Phone & Internet -->
+              <label class="calc-option active" for="opt-utilities">
+                <input type="checkbox" id="opt-utilities" data-val="1800" checked class="calc-checkbox"/>
+                <div class="calc-opt-info">
+                  <div class="calc-opt-top">
+                    <span class="calc-opt-title">📱 Cell Phone &amp; Home Internet</span>
+                    <span class="calc-opt-amount">$1,800</span>
+                  </div>
+                  <span class="calc-opt-desc">Business percentage deduction on mobile plans, Wi-Fi, and software tools</span>
+                  <div class="calc-opt-bar"><div class="calc-opt-bar-fill" style="width: 50%;"></div></div>
+                </div>
+              </label>
+
+              <!-- 5. Supplies & Education -->
+              <label class="calc-option active" for="opt-supplies">
+                <input type="checkbox" id="opt-supplies" data-val="1200" checked class="calc-checkbox"/>
+                <div class="calc-opt-info">
+                  <div class="calc-opt-top">
+                    <span class="calc-opt-title">📚 Supplies, Education &amp; Training</span>
+                    <span class="calc-opt-amount">$1,200</span>
+                  </div>
+                  <span class="calc-opt-desc">Equipment, continuing education, business certifications, and supplies</span>
+                  <div class="calc-opt-bar"><div class="calc-opt-bar-fill" style="width: 40%;"></div></div>
+                </div>
+              </label>
             </div>
           </div>
         </div>
@@ -697,9 +779,9 @@
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
       <span>Blueprint</span>
     </a>
-    <a href="#tax-h2" class="dock-btn" id="dock-tax-btn">
+    <a href="#calculator" class="dock-btn" id="dock-tax-btn">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-      <span>$12K Savings</span>
+      <span>Calculator</span>
     </a>
     <button id="dock-to-top" class="dock-btn dock-btn-icon" aria-label="Back to top">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="18 15 12 9 6 15"/></svg>

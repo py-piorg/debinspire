@@ -593,7 +593,165 @@
 
 
 /* ================================================
-   17. PAGE LOAD FADE-IN
+   17. INTERACTIVE TAX SAVINGS & DEDUCTION CALCULATOR
+   ================================================ */
+(function initTaxCalculator() {
+  const incomeSlider = document.getElementById('calc-income-slider');
+  const incomeVal = document.getElementById('calc-income-val');
+  const totalDisplay = document.getElementById('calc-total-display');
+  const monthlyDisplay = document.getElementById('calc-monthly-display');
+  const dedTotal = document.getElementById('calc-ded-total');
+  const checkboxes = document.querySelectorAll('.calc-checkbox');
+  const selectAllBtn = document.getElementById('calc-select-all');
+  const sendBtn = document.getElementById('calc-send-blueprint-btn');
+
+  if (!incomeSlider || !totalDisplay) return;
+
+  let currentSavings = 12800;
+  let animFrameId = null;
+
+  function calculate() {
+    const income = parseInt(incomeSlider.value, 10);
+    incomeVal.textContent = '$' + income.toLocaleString();
+
+    // Marginal tax rate & deduction scaling tier
+    let taxRate = 0.28;
+    let scaleMultiplier = 1.0;
+
+    if (income <= 60000) {
+      taxRate = 0.22;
+      scaleMultiplier = 0.85;
+    } else if (income <= 100000) {
+      taxRate = 0.28;
+      scaleMultiplier = 1.0;
+    } else if (income <= 160000) {
+      taxRate = 0.32;
+      scaleMultiplier = 1.18;
+    } else {
+      taxRate = 0.37;
+      scaleMultiplier = 1.35;
+    }
+
+    let sumDeductions = 0;
+
+    checkboxes.forEach(cb => {
+      const parent = cb.closest('.calc-option');
+      const baseVal = parseInt(cb.dataset.val, 10);
+      const scaledVal = Math.round(baseVal * scaleMultiplier);
+      const amountEl = parent.querySelector('.calc-opt-amount');
+      const barFill = parent.querySelector('.calc-opt-bar-fill');
+
+      if (amountEl) amountEl.textContent = '$' + scaledVal.toLocaleString();
+      if (barFill) {
+        const pct = Math.min(Math.round((scaledVal / 5600) * 100), 100);
+        barFill.style.width = pct + '%';
+      }
+
+      if (cb.checked) {
+        parent.classList.add('active');
+        sumDeductions += scaledVal;
+      } else {
+        parent.classList.remove('active');
+      }
+    });
+
+    const calculatedSavings = Math.round(sumDeductions * taxRate);
+    const calculatedMonthly = Math.round(calculatedSavings / 12);
+
+    if (dedTotal) dedTotal.textContent = '$' + sumDeductions.toLocaleString();
+    if (monthlyDisplay) monthlyDisplay.textContent = '+$' + calculatedMonthly.toLocaleString() + '/mo';
+
+    animateSavingsNumber(currentSavings, calculatedSavings);
+    currentSavings = calculatedSavings;
+
+    if (selectAllBtn) {
+      const allChecked = Array.from(checkboxes).every(c => c.checked);
+      selectAllBtn.textContent = allChecked ? 'Deselect All' : 'Select All';
+    }
+  }
+
+  function animateSavingsNumber(start, target) {
+    if (animFrameId) cancelAnimationFrame(animFrameId);
+    const duration = 280;
+    const startTime = performance.now();
+
+    function tick(now) {
+      const progress = Math.min((now - startTime) / duration, 1);
+      const ease = 1 - Math.pow(1 - progress, 3);
+      const val = Math.round(start + (target - start) * ease);
+      totalDisplay.innerHTML = '$' + val.toLocaleString() + '<span class="cs-suffix">/yr</span>';
+      if (progress < 1) {
+        animFrameId = requestAnimationFrame(tick);
+      }
+    }
+    animFrameId = requestAnimationFrame(tick);
+  }
+
+  incomeSlider.addEventListener('input', calculate);
+  checkboxes.forEach(cb => cb.addEventListener('change', calculate));
+
+  if (selectAllBtn) {
+    selectAllBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const allChecked = Array.from(checkboxes).every(c => c.checked);
+      checkboxes.forEach(cb => { cb.checked = !allChecked; });
+      calculate();
+    });
+  }
+
+  // Pre-fill Contact Form on Send Blueprint click
+  if (sendBtn) {
+    sendBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const contactSection = document.getElementById('contact');
+      const serviceSelect = document.getElementById('cf-service');
+      const msgArea = document.getElementById('cf-msg');
+      const nameInput = document.getElementById('cf-name');
+
+      if (serviceSelect) serviceSelect.value = '1on1';
+
+      const incomeStr = incomeVal.textContent;
+      const savingsStr = '$' + currentSavings.toLocaleString();
+      const monthlyStr = monthlyDisplay ? monthlyDisplay.textContent : '';
+
+      const checkedTitles = Array.from(checkboxes)
+        .filter(c => c.checked)
+        .map(c => {
+          const t = c.closest('.calc-option').querySelector('.calc-opt-title');
+          return t ? t.textContent.replace(/^[^\w\s]+/, '').trim() : '';
+        })
+        .filter(Boolean);
+
+      if (msgArea) {
+        msgArea.value = `Hi Debra,\n\nI ran my numbers on your interactive tax calculator with an estimated annual household income of ${incomeStr}.\n\nMy estimated tax savings: ${savingsStr}/year (${monthlyStr})\nStrategies I selected:\n• ${checkedTitles.join('\n• ')}\n\nI would love to book a 1-on-1 strategy session to review my numbers and put this IRS blueprint into action!`;
+      }
+
+      if (contactSection) {
+        const navH = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--nav-h')) || 80;
+        const top = contactSection.getBoundingClientRect().top + window.scrollY - navH - 12;
+        window.scrollTo({ top, behavior: 'smooth' });
+
+        setTimeout(() => {
+          if (nameInput) nameInput.focus();
+          const form = document.getElementById('contact-form');
+          if (form) {
+            form.animate([
+              { boxShadow: '0 0 0 0 rgba(52,211,153,0)' },
+              { boxShadow: '0 0 0 4px rgba(52,211,153,0.5), 0 20px 50px rgba(124,58,237,0.35)' },
+              { boxShadow: '0 0 0 0 rgba(52,211,153,0)' }
+            ], { duration: 1800, easing: 'ease-out' });
+          }
+        }, 600);
+      }
+    });
+  }
+
+  calculate();
+})();
+
+
+/* ================================================
+   18. PAGE LOAD FADE-IN
    ================================================ */
 document.body.style.opacity = '0';
 document.body.style.transition = 'opacity 0.4s ease';
