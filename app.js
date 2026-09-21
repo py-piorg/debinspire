@@ -489,7 +489,27 @@
 
 
 /* ================================================
-   14. PAGE LOAD FADE-IN
+   14. CARD SPOTLIGHT & MOUSE TRACKING
+   ================================================ */
+(function initSpotlight() {
+  const cards = document.querySelectorAll('.pillar-card, .serve-card, .diff-card, .svc-item, .cred-item, .service-feature');
+  cards.forEach(card => {
+    card.classList.add('spotlight-card');
+    card.addEventListener('mousemove', e => {
+      const rect = card.getBoundingClientRect();
+      card.style.setProperty('--mouse-x', `${e.clientX - rect.left}px`);
+      card.style.setProperty('--mouse-y', `${e.clientY - rect.top}px`);
+    }, { passive: true });
+    card.addEventListener('mouseleave', () => {
+      card.style.setProperty('--mouse-x', '-1000px');
+      card.style.setProperty('--mouse-y', '-1000px');
+    }, { passive: true });
+  });
+})();
+
+
+/* ================================================
+   15. PAGE LOAD FADE-IN
    ================================================ */
 document.body.style.opacity = '0';
 document.body.style.transition = 'opacity 0.4s ease';

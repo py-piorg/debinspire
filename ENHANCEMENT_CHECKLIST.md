@@ -33,20 +33,20 @@ A comprehensive, categorized, and actionable roadmap for elevating **[Debinspire
 ## 2. 🎨 Visual Design & Styling Enhancements
 
 ### 2.1 Spotlight Glow & Card Hover Physics
-- [ ] **Mouse-Following Radial Spotlight on Cards**:
-  - Add dynamic spotlight glow effect to `.pillar-card`, `.serve-card`, and `.svc-item` where a radial gradient follows the user's cursor across card borders (Apple / Linear style).
-- [ ] **Gradient Glassmorphic Sheen Borders**:
-  - Replace static `border: 1px solid rgba(255,255,255,0.07)` with animated iridescent border gradients on hover (`linear-gradient(135deg, rgba(155,79,212,0.6), rgba(16,185,129,0.6))`).
-- [ ] **Noise Texture Refinement**:
-  - Fine-tune `.noise` overlay blend mode (`mix-blend-mode: overlay; opacity: 0.035;`) to create a warm film-grain paper feel without degrading text contrast.
+- [x] **Mouse-Following Radial Spotlight on Cards**:
+  - *Resolved*: Added `.spotlight-card` dynamic radial illumination driven by `--mouse-x` and `--mouse-y` variables tracked in [app.js](file:///c:/Users/user/OneDrive/Desktop/kofi%27s%20Desktop/debinspire/app.js#L492-L507).
+- [x] **Gradient Glassmorphic Sheen Borders**:
+  - *Resolved*: Added masked radial iridescent gradient border on `.spotlight-card::after` on hover that traces the user's cursor around the card rims.
+- [x] **Noise Texture Refinement**:
+  - *Resolved*: Refined `.noise` in [style.css](file:///c:/Users/user/OneDrive/Desktop/kofi%27s%20Desktop/debinspire/style.css#L73-L83) with `mix-blend-mode: overlay` and opacity 0.032 for an ultra-subtle, tactile paper-film feel.
 
 ### 2.2 Typography & Color Depth
-- [ ] **Editorial Headline Flourishes**:
-  - Incorporate decorative italic serif accent badges (e.g., using `DM Serif Display` with letter-spacing tweaks and gold/emerald underlines).
-- [ ] **Glowing Text Highlights**:
-  - Add a subtle luminous glow behind key numbers (e.g. `$12,000+`) using `text-shadow: 0 0 25px rgba(52,211,153,0.35)`.
-- [ ] **Section Dividers & Fluid Background Meshes**:
-  - Add subtle flowing gradient wave separators between dark sections (`var(--ink)` to `var(--ink-2)`) rather than stark 1px lines.
+- [x] **Editorial Headline Flourishes**:
+  - *Resolved*: Enhanced `.section-h2 em` with italic gradient text fill and ambient violet glow filter (`drop-shadow(0 0 20px rgba(192, 132, 252, 0.3))`).
+- [x] **Glowing Text Highlights**:
+  - *Resolved*: Added luminous drop shadows and text shadows to `$12,000+` text, `.line-text.italic-serif`, `.proof-num`, `.hcard-value`, and `.ded-amount.highlight`.
+- [x] **Section Dividers & Fluid Background Meshes**:
+  - *Resolved*: Added ambient radial background lighting meshes to `.pillars-section`, `.serve-section`, `.services-section`, and `.diff-section` to create visual depth and seamless transitions.
 
 ---
 
