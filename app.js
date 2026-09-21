@@ -473,6 +473,8 @@
         const idx = [...cards].indexOf(e.target);
         e.target.style.transitionDelay = `${idx * 0.06}s`;
         e.target.classList.add('visible');
+        e.target.style.opacity = '1';
+        e.target.style.transform = 'translateY(0)';
         io.unobserve(e.target);
       }
     });
@@ -481,12 +483,6 @@
     c.style.opacity = '0';
     c.style.transform = 'translateY(24px)';
     c.style.transition = 'opacity .7s cubic-bezier(0.16,1,0.3,1), transform .7s cubic-bezier(0.16,1,0.3,1)';
-    c.classList.add = (cls) => {
-      if (cls === 'visible') {
-        c.style.opacity = '1';
-        c.style.transform = 'translateY(0)';
-      }
-    };
     io.observe(c);
   });
 })();
