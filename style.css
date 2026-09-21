@@ -241,10 +241,21 @@ body.cursor-hover #cursor-ring {
   font-family:var(--font-sans); font-size:.85rem; font-weight:600;
   letter-spacing:.03em;
   color:var(--muted); padding:8px 14px; border-radius:8px;
-  transition:color .2s, background .2s;
-  position:relative; overflow:hidden;
+  transition:color .25s, background .25s;
+  position:relative;
+}
+.nav-item::after {
+  content:'';
+  position:absolute; bottom:2px; left:50%;
+  width:18px; height:2px;
+  background:var(--grad-text);
+  border-radius:2px;
+  transform:translateX(-50%) scaleX(0);
+  transition:transform .25s var(--ease-out);
 }
 .nav-item:hover { color:var(--white); background:var(--surface-2); }
+.nav-item:hover::after,
+.nav-item.active::after { transform:translateX(-50%) scaleX(1); }
 .nav-item.active { color:var(--white); }
 
 .nav-cta {
@@ -508,16 +519,28 @@ body.cursor-hover #cursor-ring {
   border-bottom:1px solid var(--border);
   padding:14px 0;
 }
+.ticker:hover .ticker-track {
+  animation-play-state:paused;
+}
 .ticker-track {
   display:inline-flex; gap:0;
   white-space:nowrap;
   animation:tick 40s linear infinite;
 }
+.ticker-item,
 .ticker-track span {
   padding:0 18px;
   font-family:var(--font-sans); font-size:.75rem;
   font-weight:600; letter-spacing:.08em; text-transform:uppercase;
   color:var(--muted2);
+  text-decoration:none;
+  transition:color .25s, transform .25s;
+  display:inline-block;
+}
+.ticker-item:hover,
+.ticker-track span:not(.sep):hover {
+  color:var(--white);
+  transform:scale(1.08);
 }
 .ticker-track .sep { color:var(--p2); padding:0 4px; }
 @keyframes tick { from{transform:translateX(0)} to{transform:translateX(-50%)} }
@@ -1081,6 +1104,117 @@ cite {
 .social-link:hover svg { color:var(--p3); transform:translateX(2px); }
 
 .pillar-card.visible { opacity:1 !important; transform:translateY(0) !important; }
+
+/* ---- SCROLL PROGRESS BAR ---- */
+#scroll-progress {
+  position:fixed; top:0; left:0;
+  height:3px; width:0%;
+  background:linear-gradient(90deg, var(--p2), var(--g3), var(--p3));
+  z-index:9995;
+  box-shadow:0 0 12px rgba(52,211,153,.7);
+  pointer-events:none;
+  transition:width .08s linear;
+}
+
+/* ---- FLOATING QUICK ACTION DOCK ---- */
+.quick-dock {
+  position:fixed; bottom:24px; left:50%;
+  transform:translateX(-50%) translateY(90px);
+  opacity:0; pointer-events:none;
+  z-index:750;
+  display:flex; align-items:center; gap:6px;
+  padding:6px 10px;
+  background:rgba(13,10,26,.88);
+  backdrop-filter:blur(24px) saturate(180%);
+  -webkit-backdrop-filter:blur(24px) saturate(180%);
+  border:1px solid rgba(255,255,255,.14);
+  border-radius:100px;
+  box-shadow:0 12px 40px rgba(0,0,0,.55), 0 0 24px rgba(124,58,237,.25);
+  transition:transform .4s var(--ease-out), opacity .35s ease;
+}
+.quick-dock.visible {
+  transform:translateX(-50%) translateY(0);
+  opacity:1; pointer-events:all;
+}
+.dock-btn {
+  display:inline-flex; align-items:center; gap:7px;
+  padding:8px 16px;
+  border-radius:100px;
+  font-family:var(--font-sans); font-size:.78rem; font-weight:700;
+  letter-spacing:.02em;
+  color:var(--muted);
+  transition:background .2s, color .2s, transform .2s;
+  white-space:nowrap;
+}
+.dock-btn:hover {
+  color:var(--white);
+  background:rgba(255,255,255,.08);
+  transform:translateY(-1px);
+}
+.dock-btn svg { color:var(--g3); flex-shrink:0; }
+.dock-btn-primary {
+  background:var(--grad-a);
+  color:var(--white);
+  box-shadow:0 4px 14px rgba(124,58,237,.35);
+}
+.dock-btn-primary svg { color:var(--white); }
+.dock-btn-primary:hover {
+  background:var(--grad-b);
+  color:var(--white);
+  transform:translateY(-1px) scale(1.02);
+}
+.dock-btn-icon {
+  padding:8px 10px;
+  border-radius:50%;
+  color:var(--muted);
+}
+.dock-btn-icon:hover {
+  background:rgba(255,255,255,.1);
+  color:var(--white);
+}
+
+/* ---- SVG STROKE DRAW ANIMATION ---- */
+.pillar-card svg path,
+.pillar-card svg polyline,
+.pillar-card svg line,
+.pillar-card svg rect,
+.pillar-card svg circle,
+.serve-card svg path,
+.serve-card svg polyline,
+.serve-card svg line,
+.serve-card svg rect,
+.serve-card svg circle,
+.cred-item svg path,
+.cred-item svg polyline,
+.cred-item svg line,
+.cred-item svg rect,
+.cred-item svg circle {
+  stroke-dasharray:100;
+  stroke-dashoffset:100;
+  transition:stroke-dashoffset 1.3s cubic-bezier(0.16,1,0.3,1);
+}
+.pillar-card.visible svg path,
+.pillar-card.visible svg polyline,
+.pillar-card.visible svg line,
+.pillar-card.visible svg rect,
+.pillar-card.visible svg circle,
+.serve-card.visible svg path,
+.serve-card.visible svg polyline,
+.serve-card.visible svg line,
+.serve-card.visible svg rect,
+.serve-card.visible svg circle,
+.cred-item.visible svg path,
+.cred-item.visible svg polyline,
+.cred-item.visible svg line,
+.cred-item.visible svg rect,
+.cred-item.visible svg circle,
+.visible .cred-item svg path,
+.visible .cred-item svg polyline,
+.visible .cred-item svg line,
+.visible .cred-item svg rect,
+.visible .cred-item svg circle {
+  stroke-dashoffset:0;
+}
 
 .footer-bottom {
   border-top:1px solid var(--border);

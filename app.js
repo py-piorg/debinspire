@@ -509,7 +509,91 @@
 
 
 /* ================================================
-   15. PAGE LOAD FADE-IN
+   15. SCROLL PROGRESS INDICATOR & QUICK ACTION DOCK
+   ================================================ */
+(function initScrollProgressAndDock() {
+  const bar = document.getElementById('scroll-progress');
+  const dock = document.getElementById('quick-action-dock');
+  const toTop = document.getElementById('dock-to-top');
+
+  function update() {
+    const scrollTop = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    if (bar && docHeight > 0) {
+      const pct = Math.min(Math.max((scrollTop / docHeight) * 100, 0), 100);
+      bar.style.width = pct + '%';
+    }
+    if (dock) {
+      dock.classList.toggle('visible', scrollTop > 480);
+    }
+  }
+
+  window.addEventListener('scroll', update, { passive: true });
+  update();
+
+  if (toTop) {
+    toTop.addEventListener('click', (e) => {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  }
+})();
+
+
+/* ================================================
+   16. HERO CARD STACK 3D PARALLAX TILT
+   ================================================ */
+(function initHeroTilt() {
+  const hero = document.querySelector('.hero');
+  const stack = document.querySelector('.hero-card-stack');
+  if (!hero || !stack) return;
+  if (window.matchMedia('(pointer:coarse)').matches) return;
+
+  const main = stack.querySelector('.hcard-main');
+  const top = stack.querySelector('.hcard-top');
+  const bot = stack.querySelector('.hcard-bot');
+
+  hero.addEventListener('mousemove', e => {
+    const rect = stack.getBoundingClientRect();
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
+    const dx = (e.clientX - cx) / (window.innerWidth / 2);
+    const dy = (e.clientY - cy) / (window.innerHeight / 2);
+
+    stack.style.transform = `perspective(1000px) rotateY(${dx * 10}deg) rotateX(${-dy * 10}deg)`;
+    if (main) main.style.transform = `translateX(-50%) translateZ(24px) translate(${dx * 8}px, ${dy * 8}px)`;
+    if (top) top.style.transform = `translateZ(44px) translate(${dx * -12}px, ${dy * -12}px)`;
+    if (bot) bot.style.transform = `translateZ(34px) translate(${dx * -10}px, ${dy * -10}px)`;
+  });
+
+  hero.addEventListener('mouseleave', () => {
+    stack.style.transform = 'perspective(1000px) rotateY(0deg) rotateX(0deg)';
+    stack.style.transition = 'transform 0.7s var(--ease-out)';
+    if (main) {
+      main.style.transform = 'translateX(-50%)';
+      main.style.transition = 'transform 0.7s var(--ease-out)';
+    }
+    if (top) {
+      top.style.transform = '';
+      top.style.transition = 'transform 0.7s var(--ease-out)';
+    }
+    if (bot) {
+      bot.style.transform = '';
+      bot.style.transition = 'transform 0.7s var(--ease-out)';
+    }
+  });
+
+  hero.addEventListener('mouseenter', () => {
+    stack.style.transition = 'none';
+    if (main) main.style.transition = 'none';
+    if (top) top.style.transition = 'none';
+    if (bot) bot.style.transition = 'none';
+  });
+})();
+
+
+/* ================================================
+   17. PAGE LOAD FADE-IN
    ================================================ */
 document.body.style.opacity = '0';
 document.body.style.transition = 'opacity 0.4s ease';

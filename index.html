@@ -22,6 +22,9 @@
 </head>
 <body>
 
+  <!-- Scroll Progress Indicator -->
+  <div id="scroll-progress" aria-hidden="true"></div>
+
   <!-- Cursor -->
   <div id="cursor-dot" aria-hidden="true"></div>
   <div id="cursor-ring" aria-hidden="true"></div>
@@ -154,28 +157,28 @@
   </section>
 
   <!-- =================== MARQUEE =================== -->
-  <div class="ticker" aria-hidden="true">
+  <div class="ticker" role="region" aria-label="Core focus topics">
     <div class="ticker-track">
-      <span>Tax Deductions</span><span class="sep">&#9671;</span>
-      <span>Home-Based Business</span><span class="sep">&#9671;</span>
-      <span>Financial Independence</span><span class="sep">&#9671;</span>
-      <span>Nurse Entrepreneurs</span><span class="sep">&#9671;</span>
-      <span>Family Wealth Building</span><span class="sep">&#9671;</span>
-      <span>Generational Prosperity</span><span class="sep">&#9671;</span>
-      <span>Business Planning</span><span class="sep">&#9671;</span>
-      <span>Retirement Readiness</span><span class="sep">&#9671;</span>
-      <span>Responsible Recordkeeping</span><span class="sep">&#9671;</span>
-      <span>Community Impact</span><span class="sep">&#9671;</span>
-      <span>Tax Deductions</span><span class="sep">&#9671;</span>
-      <span>Home-Based Business</span><span class="sep">&#9671;</span>
-      <span>Financial Independence</span><span class="sep">&#9671;</span>
-      <span>Nurse Entrepreneurs</span><span class="sep">&#9671;</span>
-      <span>Family Wealth Building</span><span class="sep">&#9671;</span>
-      <span>Generational Prosperity</span><span class="sep">&#9671;</span>
-      <span>Business Planning</span><span class="sep">&#9671;</span>
-      <span>Retirement Readiness</span><span class="sep">&#9671;</span>
-      <span>Responsible Recordkeeping</span><span class="sep">&#9671;</span>
-      <span>Community Impact</span><span class="sep">&#9671;</span>
+      <a href="#tax-h2" class="ticker-item">Tax Deductions</a><span class="sep">&#9671;</span>
+      <a href="#pillar-2" class="ticker-item">Home-Based Business</a><span class="sep">&#9671;</span>
+      <a href="#services" class="ticker-item">Financial Independence</a><span class="sep">&#9671;</span>
+      <a href="#sc-1" class="ticker-item">Nurse Entrepreneurs</a><span class="sep">&#9671;</span>
+      <a href="#pillar-3" class="ticker-item">Family Wealth Building</a><span class="sep">&#9671;</span>
+      <a href="#pillar-7" class="ticker-item">Generational Prosperity</a><span class="sep">&#9671;</span>
+      <a href="#pillar-4" class="ticker-item">Business Planning</a><span class="sep">&#9671;</span>
+      <a href="#pillar-6" class="ticker-item">Retirement Readiness</a><span class="sep">&#9671;</span>
+      <a href="#pillar-5" class="ticker-item">Responsible Recordkeeping</a><span class="sep">&#9671;</span>
+      <a href="#impact" class="ticker-item">Community Impact</a><span class="sep">&#9671;</span>
+      <a href="#tax-h2" class="ticker-item">Tax Deductions</a><span class="sep">&#9671;</span>
+      <a href="#pillar-2" class="ticker-item">Home-Based Business</a><span class="sep">&#9671;</span>
+      <a href="#services" class="ticker-item">Financial Independence</a><span class="sep">&#9671;</span>
+      <a href="#sc-1" class="ticker-item">Nurse Entrepreneurs</a><span class="sep">&#9671;</span>
+      <a href="#pillar-3" class="ticker-item">Family Wealth Building</a><span class="sep">&#9671;</span>
+      <a href="#pillar-7" class="ticker-item">Generational Prosperity</a><span class="sep">&#9671;</span>
+      <a href="#pillar-4" class="ticker-item">Business Planning</a><span class="sep">&#9671;</span>
+      <a href="#pillar-6" class="ticker-item">Retirement Readiness</a><span class="sep">&#9671;</span>
+      <a href="#pillar-5" class="ticker-item">Responsible Recordkeeping</a><span class="sep">&#9671;</span>
+      <a href="#impact" class="ticker-item">Community Impact</a><span class="sep">&#9671;</span>
     </div>
   </div>
 
@@ -683,6 +686,25 @@
       </div>
     </div>
   </footer>
+
+  <!-- Floating Quick Action Dock -->
+  <aside id="quick-action-dock" class="quick-dock" aria-label="Quick navigation actions">
+    <a href="#contact" class="dock-btn dock-btn-primary" id="dock-book-btn">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+      <span>Book Call</span>
+    </a>
+    <a href="#services" class="dock-btn" id="dock-blueprint-btn">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+      <span>Blueprint</span>
+    </a>
+    <a href="#tax-h2" class="dock-btn" id="dock-tax-btn">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+      <span>$12K Savings</span>
+    </a>
+    <button id="dock-to-top" class="dock-btn dock-btn-icon" aria-label="Back to top">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="18 15 12 9 6 15"/></svg>
+    </button>
+  </aside>
 
   <script src="app.js"></script>
 </body>

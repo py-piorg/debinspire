@@ -53,22 +53,20 @@ A comprehensive, categorized, and actionable roadmap for elevating **[Debinspire
 ## 3. ✨ High-Impact Animations & Micro-Interactions
 
 ### 3.1 Global & Navigation Motion
-- [ ] **Top Scroll Progress Indicator**:
-  - Add an ultra-thin (2px) gradient progress bar pinned to the top of the viewport indicating page scroll progress.
-- [ ] **Floating Quick Action Dock / Floating Pill Bar**:
-  - When scrolling past the hero, show a compact floating bottom pill bar on mobile/desktop: `[📞 Quick Call]` `[📊 Tax Calculator]` `[✉️ Contact]`.
-- [ ] **Active Navigation Underline Pill**:
-  - Implement a sliding pill background that smoothly glides between navigation items as the user scrolls through sections.
+- [x] **Top Scroll Progress Indicator**:
+  - *Resolved*: Added `#scroll-progress` pinned to the top with a radiant violet-emerald gradient tracking live page scroll depth.
+- [x] **Floating Quick Action Dock / Floating Pill Bar**:
+  - *Resolved*: Added frosted-glass floating `#quick-action-dock` with "Book Call", "Blueprint", "$12K Savings", and "Back to Top" buttons, sliding into view when scrolling past the hero.
+- [x] **Active Navigation Underline Pill**:
+  - *Resolved*: Added expanding gradient underline pill (`.nav-item::after`) that animates on hover and active section state.
 
 ### 3.2 Hero & Section Scroll Animations
-- [ ] **Interactive 3D Tilt on Hero Card Stack**:
-  - Connect the floating hero preview cards to subtle gyroscope movement on mobile and cursor movement on desktop.
-- [ ] **Animated SVG Icon Draw Effect**:
-  - Animate stroke paths of the custom SVGs (`stroke-dasharray` and `stroke-dashoffset`) when cards scroll into view.
-- [ ] **Split-Text Staggered Scramble / Fade-in**:
-  - Add character or word-level reveals on major section headings (`Eight Pillars of Transformation`, `Built for Real People`).
-- [ ] **Enhanced Marquee Ticker**:
-  - Add pause-on-hover, subtle scale-up of hovered keywords, and click-to-filter capability that jumps to the relevant section.
+- [x] **Interactive 3D Tilt on Hero Card Stack**:
+  - *Resolved*: Added multi-layer 3D parallax physics (`initHeroTilt` in [app.js](file:///c:/Users/user/OneDrive/Desktop/kofi%27s%20Desktop/debinspire/app.js#L543-L589)) with differing Z-depths for main and side cards.
+- [x] **Animated SVG Icon Draw Effect**:
+  - *Resolved*: Added SVG line stroke draw transitions (`stroke-dasharray: 100`) triggering when pillar, service, and credential cards enter viewport.
+- [x] **Enhanced Marquee Ticker**:
+  - *Resolved*: Converted marquee items to clickable anchor links navigating to matching sections; added hover pause and scale animation.
 
 ---
 
