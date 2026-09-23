@@ -604,17 +604,78 @@
   const checkboxes = document.querySelectorAll('.calc-checkbox');
   const selectAllBtn = document.getElementById('calc-select-all');
   const sendBtn = document.getElementById('calc-send-blueprint-btn');
+  const familyToggles = document.querySelectorAll('.family-toggle');
+  const familyCounts = document.querySelectorAll('.family-count');
+  const incomeContext = document.getElementById('calc-income-context');
+  const childCheckbox = document.getElementById('opt-child');
 
   if (!incomeSlider || !totalDisplay) return;
 
   let currentSavings = 12800;
   let animFrameId = null;
 
+  function getSelectedChildCount() {
+    const active = document.querySelector('.family-count.active');
+    if (!active) return 0;
+    const value = parseInt(active.dataset.count, 10);
+    return Number.isFinite(value) ? value : 0;
+  }
+
+  function getHasChildren() {
+    const active = document.querySelector('.family-toggle.active');
+    if (!active) return true;
+    return active.dataset.hasChildren === 'true';
+  }
+
+  function updateFamilyUi() {
+    const hasChildren = getHasChildren();
+    const childCount = getSelectedChildCount();
+    const countGroup = document.querySelector('.family-count-group');
+
+    familyToggles.forEach(btn => {
+      const isActive = btn.dataset.hasChildren === String(hasChildren);
+      btn.classList.toggle('active', isActive);
+      btn.setAttribute('aria-pressed', String(isActive));
+    });
+
+    familyCounts.forEach(btn => {
+      const isActive = Number(btn.dataset.count) === childCount;
+      btn.classList.toggle('active', isActive);
+      btn.setAttribute('aria-pressed', String(isActive));
+    });
+
+    if (countGroup) countGroup.classList.toggle('is-hidden', !hasChildren);
+
+    if (childCheckbox) {
+      childCheckbox.disabled = !hasChildren;
+      if (!hasChildren) childCheckbox.checked = false;
+    }
+
+    if (incomeContext) {
+      const income = parseInt(incomeSlider.value, 10);
+      const familyText = hasChildren ? `${childCount} child${childCount === 1 ? '' : 'ren'} in the home` : 'no children in the home';
+
+      let story = 'At this income level, the opportunity is meaningful — especially if you are running a legitimate home business and documenting everyday deductions.';
+      if (income <= 60000) {
+        story = 'At this income level, a clean home-business structure can still produce a noticeable cash-flow lift.';
+      } else if (income <= 100000) {
+        story = 'At this income level, the deduction opportunity is strong — especially when your household is balancing business and family expenses.';
+      } else if (income <= 160000) {
+        story = 'At this income level, the tax strategy opportunity becomes more powerful, and household planning can widen your annual savings window.';
+      } else if (income > 160000) {
+        story = 'At this income level, the savings opportunity is substantial — the combination of higher income, family support, and business write-offs can create a meaningful annual return.';
+      }
+
+      incomeContext.textContent = `${story} Household snapshot: ${familyText}.`;
+    }
+  }
+
   function calculate() {
     const income = parseInt(incomeSlider.value, 10);
+    const hasChildren = getHasChildren();
+    const childCount = getSelectedChildCount();
     incomeVal.textContent = '$' + income.toLocaleString();
 
-    // Marginal tax rate & deduction scaling tier
     let taxRate = 0.28;
     let scaleMultiplier = 1.0;
 
@@ -636,7 +697,17 @@
 
     checkboxes.forEach(cb => {
       const parent = cb.closest('.calc-option');
-      const baseVal = parseInt(cb.dataset.val, 10);
+      if (!parent) return;
+
+      let baseVal = parseInt(cb.dataset.val, 10);
+      if (cb.id === 'opt-child' && !hasChildren) {
+        baseVal = 0;
+      }
+
+      if (cb.id === 'opt-child' && hasChildren && childCount > 0) {
+        baseVal = 2600 + ((childCount - 1) * 1100);
+      }
+
       const scaledVal = Math.round(baseVal * scaleMultiplier);
       const amountEl = parent.querySelector('.calc-opt-amount');
       const barFill = parent.querySelector('.calc-opt-bar-fill');
@@ -665,9 +736,11 @@
     currentSavings = calculatedSavings;
 
     if (selectAllBtn) {
-      const allChecked = Array.from(checkboxes).every(c => c.checked);
+      const allChecked = Array.from(checkboxes).every(c => c.checked || c.disabled);
       selectAllBtn.textContent = allChecked ? 'Deselect All' : 'Select All';
     }
+
+    updateFamilyUi();
   }
 
   function animateSavingsNumber(start, target) {
@@ -687,19 +760,47 @@
     animFrameId = requestAnimationFrame(tick);
   }
 
+  familyToggles.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const value = btn.dataset.hasChildren === 'true';
+      if (value) {
+        document.querySelectorAll('.family-toggle').forEach(toggle => {
+          toggle.classList.toggle('active', toggle === btn);
+          toggle.setAttribute('aria-pressed', String(toggle === btn));
+        });
+      } else {
+        document.querySelectorAll('.family-toggle').forEach(toggle => {
+          toggle.classList.toggle('active', toggle === btn);
+          toggle.setAttribute('aria-pressed', String(toggle === btn));
+        });
+      }
+      calculate();
+    });
+  });
+
+  familyCounts.forEach(btn => {
+    btn.addEventListener('click', () => {
+      familyCounts.forEach(item => {
+        const selected = item === btn;
+        item.classList.toggle('active', selected);
+        item.setAttribute('aria-pressed', String(selected));
+      });
+      calculate();
+    });
+  });
+
   incomeSlider.addEventListener('input', calculate);
   checkboxes.forEach(cb => cb.addEventListener('change', calculate));
 
   if (selectAllBtn) {
     selectAllBtn.addEventListener('click', (e) => {
       e.preventDefault();
-      const allChecked = Array.from(checkboxes).every(c => c.checked);
-      checkboxes.forEach(cb => { cb.checked = !allChecked; });
+      const allChecked = Array.from(checkboxes).every(c => c.checked || c.disabled);
+      checkboxes.forEach(cb => { if (!cb.disabled) cb.checked = !allChecked; });
       calculate();
     });
   }
 
-  // Pre-fill Contact Form on Send Blueprint click
   if (sendBtn) {
     sendBtn.addEventListener('click', (e) => {
       e.preventDefault();
@@ -708,22 +809,24 @@
       const msgArea = document.getElementById('cf-msg');
       const nameInput = document.getElementById('cf-name');
 
-      if (serviceSelect) serviceSelect.value = '1on1';
+      if (serviceSelect) serviceSelect.value = 'workshop';
 
       const incomeStr = incomeVal.textContent;
       const savingsStr = '$' + currentSavings.toLocaleString();
       const monthlyStr = monthlyDisplay ? monthlyDisplay.textContent : '';
+      const childCount = getSelectedChildCount();
+      const householdText = childCount > 0 ? `${childCount} child${childCount === 1 ? '' : 'ren'}` : 'no children';
 
       const checkedTitles = Array.from(checkboxes)
         .filter(c => c.checked)
         .map(c => {
-          const t = c.closest('.calc-option').querySelector('.calc-opt-title');
+          const t = c.closest('.calc-option')?.querySelector('.calc-opt-title');
           return t ? t.textContent.replace(/^[^\w\s]+/, '').trim() : '';
         })
         .filter(Boolean);
 
       if (msgArea) {
-        msgArea.value = `Hi Debra,\n\nI ran my numbers on your interactive tax calculator with an estimated annual household income of ${incomeStr}.\n\nMy estimated tax savings: ${savingsStr}/year (${monthlyStr})\nStrategies I selected:\n• ${checkedTitles.join('\n• ')}\n\nI would love to book a 1-on-1 strategy session to review my numbers and put this IRS blueprint into action!`;
+        msgArea.value = `Hi Debra,\n\nI ran my numbers on your interactive tax calculator with an estimated annual household income of ${incomeStr}.\n\nMy estimated tax savings: ${savingsStr}/year (${monthlyStr})\nFamily snapshot: ${householdText}\nStrategies I selected:\n• ${checkedTitles.join('\n• ')}\n\nI would like to review my numbers and discuss the right next step for my household and tax strategy.`;
       }
 
       if (contactSection) {
@@ -751,7 +854,43 @@
 
 
 /* ================================================
-   18. PAGE LOAD FADE-IN
+   18. FAQ ACCORDION
+   ================================================ */
+(function initFaqAccordion() {
+  const items = document.querySelectorAll('.faq-item');
+  if (!items.length) return;
+
+  items.forEach(item => {
+   const btn = item.querySelector('.faq-question');
+   const answer = item.querySelector('.faq-answer');
+   if (!btn || !answer) return;
+
+   btn.addEventListener('click', () => {
+     const isOpen = item.classList.contains('active');
+     items.forEach(other => {
+       other.classList.remove('active');
+       const otherBtn = other.querySelector('.faq-question');
+       const otherAnswer = other.querySelector('.faq-answer');
+       if (otherBtn) otherBtn.setAttribute('aria-expanded', 'false');
+       if (otherAnswer) otherAnswer.style.maxHeight = null;
+     });
+
+     if (!isOpen) {
+       item.classList.add('active');
+       btn.setAttribute('aria-expanded', 'true');
+       answer.style.maxHeight = answer.scrollHeight + 'px';
+     }
+   });
+
+   if (item.classList.contains('active')) {
+     answer.style.maxHeight = answer.scrollHeight + 'px';
+   }
+  });
+})();
+
+
+/* ================================================
+   19. PAGE LOAD FADE-IN
    ================================================ */
 document.body.style.opacity = '0';
 document.body.style.transition = 'opacity 0.4s ease';
